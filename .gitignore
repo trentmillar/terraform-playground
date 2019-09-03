@@ -1,2 +1,5 @@
 # ignore init output
 **/.terraform
+
+# contents of keypair
+#keypair/*/*.*
