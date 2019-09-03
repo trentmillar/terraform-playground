@@ -10,12 +10,16 @@ terraform {
 module "setup" {
     source = "./00 - Setup"
     key_name = ""
-    public_key_path = ""
+    key_path = ""
 }
-
+output "user_key_pair" {
+  value = "${module.setup.aws_key_pair}"
+}
 module "vpc" {
     source = "./01 - Infrastructure"
     key_name = ""
     key_path = ""
     region = "${var.REGION}"
 }
+
+
