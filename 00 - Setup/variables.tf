@@ -2,6 +2,6 @@ variable "key_name" {
   
 }
 
-variable "key_path" {
+variable "key_public_path" {
   
 }
