@@ -3,6 +3,12 @@ provider "aws" {
     profile = "${var.PROFILE}"
 }
 
+provider "http" { }
+
+data "aws_region" "current" { }
+
+data "aws_availability_zones" "available" { }
+
 terraform {
     backend "s3" { }
 }
