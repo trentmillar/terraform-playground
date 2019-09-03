@@ -2,4 +2,4 @@
 **/.terraform
 
 # contents of keypair
-#keypair/*/*.*
+keypair/**/*.*

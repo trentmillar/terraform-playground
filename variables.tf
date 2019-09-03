@@ -5,3 +5,11 @@ variable "REGION" {
 variable "PROFILE" {
     default = "default"
 }
+
+variable "KEY_NAME" {
+
+}
+
+variable "KEY_PATH" {
+    
+}

@@ -22,4 +22,3 @@ module "vpc" {
     region = "${var.REGION}"
 }
 
-
