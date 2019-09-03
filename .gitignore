@@ -3,3 +3,6 @@
 
 # contents of keypair
 keypair/**/*.*
+
+**/*.tfvars
+!*/example.tfvars
