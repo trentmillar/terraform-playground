@@ -8,11 +8,17 @@ variable "PROFILE" {
     default = "default"
 }
 
+variable "REMOTE_STATE_BUCKET" { }
+
+variable "REMOTE_STATE_KEY" { }
+
 variable "KEY_NAME" { }
 
 variable "KEY_PUBLIC_PATH" { }
 
 variable "KEY_PRIVATE_PATH" { }
+
+variable "USERS_LOCAL_CIDR" { }
 
 variable "VPC_CIDR" {
     default = "10.0.0.0/16"
@@ -41,6 +47,8 @@ variable "PUBLIC_SUBNET_C_CIDR" {
 variable "PRIVATE_SUBNET_C_CIDR" {
     default = "10.0.6.0/24"
 }
+
+variable "KUBERNETES_CLUSTER_NAME" { }
 
 variable "KUBERNETES_CLUSTER_KEY" { }
 

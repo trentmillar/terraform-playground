@@ -4,5 +4,7 @@
 # contents of keypair
 keypair/**/*.*
 
+config-map-aws-auth.yaml
+
 **/*.tfvars
 !*/example.tfvars

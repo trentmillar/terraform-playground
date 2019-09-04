@@ -128,7 +128,6 @@ resource "aws_nat_gateway" "nat_gw" {
   tags = {
       Name = "${var.name_prefix}-NAT-DW"
   }
-
   depends_on    = ["aws_eip.elastic_ip_for_nat_gw"]
 }
 

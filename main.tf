@@ -5,21 +5,23 @@ provider "aws" {
 
 provider "http" { }
 
-data "aws_region" "current" { }
-
-data "aws_availability_zones" "available" { }
-
 terraform {
     backend "s3" { }
 }
+
+# data "terraform_remote_state" "network_configuration" {
+#     backend = "s3"
+#     config = {
+#         bucket = "${var.REMOTE_STATE_BUCKET}"
+#         key = "${var.REMOTE_STATE_KEY}"
+#         region = "${var.REGION}"
+#     }
+# }
 
 module "setup" {
     source = "./00 - Setup"
     key_name = "${var.KEY_NAME}"
     key_public_path = "${var.KEY_PUBLIC_PATH}"
-}
-output "user_key_pair" {
-  value = "${module.setup.aws_key_pair}"
 }
 
 module "vpc" {
@@ -27,6 +29,9 @@ module "vpc" {
     name_prefix = "${var.ENVIRONMENT}"
     region = "${var.REGION}"
     vpc_cidr = "${var.VPC_CIDR}"
+    //availability_zones = ["${slice(data.aws_availability_zones.available.names, 0, 3)}"]
+    //private_subnet_cidr_blocks = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+    //public_subnet_cidr_blocks = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
     private_subnet_a_cidr = "${var.PRIVATE_SUBNET_A_CIDR}"
     public_subnet_a_cidr = "${var.PUBLIC_SUBNET_A_CIDR}"
     private_subnet_b_cidr = "${var.PRIVATE_SUBNET_B_CIDR}"
@@ -41,3 +46,18 @@ module "vpc" {
     kubernetes_elb_internal_value = "${var.KUBERNETES_ELB_INTERNAL_VALUE}"
 }
 
+module "instances" {
+    source = "./02 - Instances"
+    name_prefix = "${var.ENVIRONMENT}"
+    kubernetes_cluster_key = "${var.KUBERNETES_CLUSTER_KEY}"
+    vpc_id = "${module.vpc.cluster_vpc.id}"
+    local_cidr = "${var.USERS_LOCAL_CIDR}"
+}
+
+module "kubernetes" {
+    source = "./03 - Kubernetes"
+    name_prefix = "${var.ENVIRONMENT}"
+    kubernetes_cluster_name = "${var.KUBERNETES_CLUSTER_NAME}"
+    kubernetes_security_group = "${module.instances.kubernetes_security_group}"
+    public_subnet_ids = "${module.vpc.public_subnet_ids}"
+}
