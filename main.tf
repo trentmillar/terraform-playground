@@ -61,3 +61,15 @@ module "kubernetes" {
     kubernetes_security_group = "${module.instances.kubernetes_security_group}"
     public_subnet_ids = "${module.vpc.public_subnet_ids}"
 }
+
+module "nodes" {
+    source = "./04 - Nodes"
+    name_prefix = "${var.ENVIRONMENT}"
+    eks_cluster = "${module.kubernetes.eks_cluster}"
+    kubernetes_cluster_name = "${var.KUBERNETES_CLUSTER_NAME}"
+    kubernetes_cluster_key = "${var.KUBERNETES_CLUSTER_KEY}"
+    kubernetes_cluster_value = "owned"
+    nodes_iam_instance_profile = "${module.kubernetes.nodes_iam_instance_profile}"
+    nodes_security_group = "${module.instances.nodes_security_group}"
+    public_subnet_ids = "${module.vpc.public_subnet_ids}"
+}

@@ -12,12 +12,12 @@ resource "aws_security_group" "kubernetes_security_group" {
   }
 }
 
-resource "aws_security_group" "pod_security_group" {
-  name        = "${var.name_prefix}-Pod-SG"
-  description = "Pods pipe to Kubernetes"
+resource "aws_security_group" "node_security_group" {
+  name        = "${var.name_prefix}-Node-SG"
+  description = "Nodes pipe to Kubernetes"
   vpc_id      = "${var.vpc_id}"
   tags = {
-    Name                            = "${var.name_prefix}-Pod-SG"
+    Name                            = "${var.name_prefix}-Node-SG"
     "${var.kubernetes_cluster_key}" = "${var.kubernetes_cluster_value}"
   }
 
@@ -30,30 +30,30 @@ resource "aws_security_group" "pod_security_group" {
 }
 
 resource "aws_security_group_rule" "kubernetes-pod-https" {
-  description              = "Pod pipe to Kubernetes"
+  description              = "Nodes pipe to Kubernetes"
   from_port                = 443
   protocol                 = "tcp"
   security_group_id        = "${aws_security_group.kubernetes_security_group.id}"
-  source_security_group_id = "${aws_security_group.pod_security_group.id}"
+  source_security_group_id = "${aws_security_group.node_security_group.id}"
   to_port                  = 443
   type                     = "ingress"
 }
 
-resource "aws_security_group_rule" "pod-to-pod" {
-  description              = "Pod pipe to Pods"
+resource "aws_security_group_rule" "node-to-node" {
+  description              = "Nodes pipe to Nodes"
   from_port                = 0
   protocol                 = "-1"
-  security_group_id        = "${aws_security_group.pod_security_group.id}"
-  source_security_group_id = "${aws_security_group.pod_security_group.id}"
+  security_group_id        = "${aws_security_group.node_security_group.id}"
+  source_security_group_id = "${aws_security_group.node_security_group.id}"
   to_port                  = 65535
   type                     = "ingress"
 }
 
-resource "aws_security_group_rule" "kubernetes-to-pod" {
-  description              = "Kubernetes pipe to Pods"
+resource "aws_security_group_rule" "kubernetes-to-node" {
+  description              = "Kubernetes pipe to Nodes"
   from_port                = 1025
   protocol                 = "tcp"
-  security_group_id        = "${aws_security_group.pod_security_group.id}"
+  security_group_id        = "${aws_security_group.node_security_group.id}"
   source_security_group_id = "${aws_security_group.kubernetes_security_group.id}"
   to_port                  = 65535
   type                     = "ingress"
