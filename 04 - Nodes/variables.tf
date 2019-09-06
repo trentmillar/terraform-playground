@@ -1,5 +1,8 @@
 variable "name_prefix" { }
 
+variable "key_name" { }
+
+
 variable "eks_cluster" { }
 
 variable "kubernetes_cluster_name" { }

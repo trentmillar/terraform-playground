@@ -74,4 +74,5 @@ module "nodes" {
   nodes_iam_instance_profile = "${module.kubernetes.nodes_iam_instance_profile}"
   nodes_security_group       = "${module.instances.nodes_security_group}"
   public_subnet_ids          = "${module.vpc.public_subnet_ids}"
+  key_name                   = "${module.setup.aws_key_pair.key_name}"
 }
