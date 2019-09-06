@@ -2,7 +2,8 @@
 **/.terraform
 
 # contents of keypair
-keypair/**/*.*
+keypair/*
+!keypair/README.md
 
 config-map-aws-auth.yaml
 
