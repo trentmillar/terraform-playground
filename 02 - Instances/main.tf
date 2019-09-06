@@ -124,7 +124,7 @@ resource "aws_elb" "cluster_load_balancer" {
 }
 
 resource "aws_elb" "backend_load_balancer" {
-  name            = "Schedule-Private-LoadBalance"
+  name            = "${var.name_prefix}-Private-LoadBalance"
   internal        = true
   security_groups = ["${aws_security_group.elb_security_group.id}"]
   subnets         = "${var.private_subnet_ids}"
