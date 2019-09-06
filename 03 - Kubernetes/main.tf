@@ -68,7 +68,6 @@ resource "aws_iam_role_policy_attachment" "kubernetes_AwsEksServicePolicy" {
   role       = "${aws_iam_role.kubernetes_role.name}"
 }
 
-# If no loadbalancer was ever created in this region, then this following role is necessary
 resource "aws_iam_role_policy" "kubernetes_service_policy" {
   name = "service-linked-role"
   role = "${aws_iam_role.kubernetes_role.name}"

@@ -28,7 +28,7 @@ resource "aws_launch_configuration" "eks_node" {
   user_data = <<EOF
 #!/bin/bash
 set -o xtrace
-/etc/eks/bootstrap.sh "${var.kubernetes_cluster_name}" --apiserver-endpoint "var.eks_cluster.endpoint" --b64-cluster-ca "${var.eks_cluster.certificate_authority.0.data}"
+/etc/eks/bootstrap.sh --apiserver-endpoint '${var.eks_cluster.endpoint}' --b64-cluster-ca '${var.eks_cluster.certificate_authority.0.data}' '${var.kubernetes_cluster_name}'
 EOF
 }
 

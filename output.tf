@@ -58,10 +58,6 @@ output "user_key_pair" {
   value = "${module.setup.aws_key_pair}"
 }
 
-output "public_ip" {
-  value = "${module.vpc.public_ip}"
-}
-
 output "public_subnet_ids" {
   value = "${module.vpc.public_subnet_ids}"
 }
