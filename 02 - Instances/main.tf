@@ -32,12 +32,20 @@ resource "aws_security_group" "node_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  //todo, remove ... exposes all services running on the nodes.
   ingress {
+    from_port = 0
+    protocol  = "-1"
+    to_port   = 0
+    cidr_blocks = ["0.0.0.0/0"] 
+  }
+
+  /* ingress {
     from_port = 22
     protocol  = "TCP"
     to_port   = 22
     cidr_blocks = ["0.0.0.0/0"]
-  }
+  } */
 }
 
 resource "aws_security_group" "elb_security_group" {
