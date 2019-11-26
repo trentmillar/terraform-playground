@@ -76,3 +76,7 @@ module "nodes" {
   public_subnet_ids          = "${module.vpc.public_subnet_ids}"
   key_name                   = "${module.setup.aws_key_pair.key_name}"
 }
+
+module "backup" {
+  source = "./05 - Backup"
+}

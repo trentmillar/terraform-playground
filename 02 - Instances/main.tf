@@ -34,10 +34,10 @@ resource "aws_security_group" "node_security_group" {
 
   //todo, remove ... exposes all services running on the nodes.
   ingress {
-    from_port = 0
-    protocol  = "-1"
-    to_port   = 0
-    cidr_blocks = ["0.0.0.0/0"] 
+    from_port   = 0
+    protocol    = "-1"
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   /* ingress {
@@ -49,23 +49,24 @@ resource "aws_security_group" "node_security_group" {
 }
 
 resource "aws_security_group" "elb_security_group" {
-  name = "${var.name_prefix}-ELB-SG"
+  name        = "${var.name_prefix}-ELB-SG"
   description = "ELB Security Group"
-  vpc_id = "${var.vpc_id}"
+  vpc_id      = "${var.vpc_id}"
+
 
   ingress {
-      from_port = 0
-      protocol = "-1"
-      to_port = 0
-      cidr_blocks = ["0.0.0.0/0"]
-      description = "Allow web traffic to LB"
+    from_port   = 0
+    protocol    = "-1"
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow web traffic to LB"
   }
 
   egress {
-      from_port = 0
-      protocol = "-1"
-      to_port = 0
-      cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 0
+    protocol    = "-1"
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -116,10 +117,10 @@ resource "aws_elb" "cluster_load_balancer" {
   subnets         = "${var.public_subnet_ids}"
 
   listener {
-      instance_port     = 80
-      instance_protocol = "HTTP"
-      lb_port           = 80
-      lb_protocol       = "HTTP"
+    instance_port     = 80
+    instance_protocol = "HTTP"
+    lb_port           = 80
+    lb_protocol       = "HTTP"
   }
 
   /* health_check {
@@ -138,17 +139,61 @@ resource "aws_elb" "backend_load_balancer" {
   subnets         = "${var.private_subnet_ids}"
 
   listener {
-      instance_port     = 80
-      instance_protocol = "HTTP"
-      lb_port           = 80
-      lb_protocol       = "HTTP"
+    instance_port     = 80
+    instance_protocol = "HTTP"
+    lb_port           = 80
+    lb_protocol       = "HTTP"
   }
 
-    /* health_check {
+  /* health_check {
       healthy_threshold   = 5
       interval            = 30
       target              = "HTTP:80/index.html"
       timeout             = 10
       unhealthy_threshold = 5
   } */
+}
+
+// just for aws-backup testing
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"]
+}
+
+resource "aws_instance" "back_me_up" {
+  subnet_id     = "${var.public_subnet_ids[0]}"
+  ami           = "${data.aws_ami.ubuntu.id}"
+  instance_type = "t2.micro"
+
+  tags = {
+    backup-policy = "daily"
+  }
+}
+
+resource "aws_ebs_volume" "back_me_up_ebs_volume" {
+  availability_zone = "us-west-2a"
+  size              = 10
+
+  tags = {
+    backup-policy = "daily"
+  }
+}
+
+resource "aws_volume_attachment" "back_me_up_ebs_volume_attachment" {
+  device_name = "/dev/sdd"
+  volume_id   = "${aws_ebs_volume.back_me_up_ebs_volume.id}"
+  instance_id = "${aws_instance.back_me_up.id}"
+
+
 }

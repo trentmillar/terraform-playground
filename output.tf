@@ -1,4 +1,4 @@
-locals {
+/* locals {
   kubeconfig = <<KUBECONFIG
 apiVersion: v1
 clusters:
@@ -75,4 +75,4 @@ output "eks_cluster" {
 
 output "node_iam_role" {
   value = "${module.kubernetes.node_iam_role}"
-}
+} */

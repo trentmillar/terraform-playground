@@ -1,0 +1,3 @@
+bucket         = "nutrien-terraform-state"
+region         = "us-west-2"
+key            = "terraform.tfstate"

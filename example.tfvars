@@ -1,4 +1,4 @@
-ENVIRONMENT = "MY_NAME_PRFIXING"
+ENVIRONMENT = "TEST"
 
 REGION = "us-west-2"
 PROFILE = "default"
